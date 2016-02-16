@@ -20,11 +20,10 @@ public class History {
     private ArrayList<Message> history = new ArrayList<>();
     final static String LOG_FILE = "logfile.txt";
     final static String STRING_PARSE = "//-----------------------------------------------*****-----------------------------------------------\\\\\n";
+
     History() throws IOException {
         FileWriter writerLog = new FileWriter(LOG_FILE, true);
-        writerLog.write(STRING_PARSE + "Start \"History.java\"\r\n");
-        writerLog.flush();
-        writerLog.close();
+        writerLog.write(STRING_PARSE + "Start \"History.java\"\n");
         System.out.println("What you want to do?\n" +
                 "0.Load history from the file.\n" +
                 "1.Save the history.\n" +
@@ -54,7 +53,7 @@ public class History {
                     break;
                 }
                 case "2": {
-                    addMessage(writerLog, in);
+                    addMessage(writerLog);
                     break;
                 }
                 case "3": {
@@ -62,33 +61,33 @@ public class History {
                     break;
                 }
                 case "4": {
-                    deleteMes(writerLog, in);
+                    deleteMes(writerLog);
                     break;
                 }
                 case "5": {
-                    findAuthor(writerLog, in);
+                    findAuthor(writerLog);
                     break;
                 }
                 case "6": {
-                    findWord(writerLog, in);
+                    findWord(writerLog);
                     break;
                 }
                 case "7": {
-                    findRegularExpressions(writerLog, in);
+                    findRegularExpressions(writerLog);
                     break;
                 }
                 case "8": {
-                    findByTimePeriod(writerLog, in);
+                    findByTimePeriod(writerLog);
                     break;
                 }
                 case "9": {
-                    writerLog.write(STRING_PARSE + "End of program.\r\n");
+                    writerLog.write(STRING_PARSE + "End of program.\n");
                     writerLog.close();
                     System.out.println("End of program.");
                     break;
                 }
                 default: {
-                    writerLog.write(STRING_PARSE + "Wrong input!(chooser)\r\n");
+                    writerLog.write(STRING_PARSE + "Wrong input!(chooser)\n");
                     System.out.println("Wrong input! Number from 0 to 9!");
                     break;
                 }
@@ -97,7 +96,7 @@ public class History {
     }
 
     public void loadFromFile(FileWriter writerLog) throws IOException{
-        writerLog.write(STRING_PARSE + "Load history from file.\r\n" );
+        writerLog.write(STRING_PARSE + "Load history from file.\n" );
         history.clear();
         try {
             String jData = Files.readAllLines(Paths.get("history.json")).toString();
@@ -118,28 +117,29 @@ public class History {
                 history.add(tempMes);
             }
             System.out.println("Successfully done.");
-            writerLog.write(STRING_PARSE + "Successfully done.\r\n");
+            writerLog.write(STRING_PARSE + "Successfully done.\n");
         } catch (NoSuchFileException e) {
             System.out.println("No such file " + e.getMessage());
-            writerLog.write(STRING_PARSE + "No such file " + e.getMessage() + "!\r\n");
+            writerLog.write(STRING_PARSE + "No such file " + e.getMessage() + "!\n");
         }
     }
 
-    public void addMessage(FileWriter writerLog, Scanner in) throws IOException{
-        writerLog.write(STRING_PARSE + "Add a message.\r\n");
+    public void addMessage(FileWriter writerLog) throws IOException{
+        Scanner in = new Scanner(System.in);
+        writerLog.write(STRING_PARSE + "Add a message.\n");
         System.out.println("Input your name:");
-        String name = in.next();
+        String name = in.nextLine();
         System.out.println("Input your message:");
-        String mes = in.next();
+        String mes = in.nextLine();
         Date tmpDate = new Date();
         Message temp = new Message("id-" + ((history.size() + 1)), name, mes, tmpDate);
         history.add(temp);
         System.out.println("Successfully added.");
-        writerLog.write(STRING_PARSE + "Successfully added 1 message.\r\n");
+        writerLog.write(STRING_PARSE + "Successfully added 1 message.\n");
     }
 
     public void saveToFile(FileWriter writerLog) throws IOException{
-        writerLog.write(STRING_PARSE + "Save messages in file.\r\n");
+        writerLog.write(STRING_PARSE + "Save messages in file.\n");
         if (!history.isEmpty()) {
             FileWriter jOut = new FileWriter("history.json");
             JsonWriter jWrite = Json.createWriter(jOut);
@@ -156,23 +156,24 @@ public class History {
             jOut.close();
             jWrite.close();
             System.out.println("Successfully done.");
-            writerLog.write(STRING_PARSE + "Successfully done.\r\n");
+            writerLog.write(STRING_PARSE + "Successfully done.\n");
         }
         else {
             System.out.println("History is empty!");
-            writerLog.write(STRING_PARSE + "History is empty!\r\n");
+            writerLog.write(STRING_PARSE + "History is empty!\n");
         }
     }
 
-    public void deleteMes(FileWriter writerLog, Scanner in) throws IOException{
-        writerLog.write(STRING_PARSE + "Delete message.\r\n");
+    public void deleteMes(FileWriter writerLog) throws IOException{
+        Scanner in = new Scanner(System.in);
+        writerLog.write(STRING_PARSE + "Delete message.\n");
         System.out.println("Input id:");
         String delId = in.next();
         boolean userWithDelId = false;
         int count = 0;
-        for (Message mes : history) {
-            if (mes.getId().equals(delId)) {
-                history.remove(mes);
+        for (int i=0;i<history.size();i++) {
+            if (history.get(i).getId().equals(delId)) {
+                history.remove(i);
                 userWithDelId = true;
                 count++;
             }
@@ -181,11 +182,12 @@ public class History {
             System.out.println("Successfully done");
         else
             System.out.println("There is no such message!");
-        writerLog.write(STRING_PARSE + "Deleted " + count + " message(s).\r\n");
+        writerLog.write(STRING_PARSE + "Deleted " + count + " message(s).\n");
     }
 
-    public void findAuthor(FileWriter writerLog, Scanner in) throws IOException{
-        writerLog.write(STRING_PARSE + "Find message by author.\r\n");
+    public void findAuthor(FileWriter writerLog) throws IOException{
+        Scanner in = new Scanner(System.in);
+        writerLog.write(STRING_PARSE + "Find message by author.\n");
         System.out.println("Input author:");
         String auth = in.nextLine();
         boolean findAuth = false;
@@ -201,11 +203,12 @@ public class History {
             System.out.println("Successfully done.");
         else
             System.out.println("No message from this author!");
-        writerLog.write(STRING_PARSE + count + " message(s) found.\r\n");
+        writerLog.write(STRING_PARSE + count + " message(s) found.\n");
     }
 
-    public void findByTimePeriod(FileWriter writerLog, Scanner in) throws IOException{
-        writerLog.write(STRING_PARSE + "Find message by time period.\r\n");
+    public void findByTimePeriod(FileWriter writerLog) throws IOException{
+        Scanner in = new Scanner(System.in);
+        writerLog.write(STRING_PARSE + "Find message by time period.\n");
         boolean findInPeriod = false;
         int count = 0;
         try {
@@ -228,16 +231,17 @@ public class History {
                 System.out.println("Successfully done.");
             else
                 System.out.println("No message of this period!");
-            writerLog.write(STRING_PARSE + count + " message(s) found.\r\n");
+            writerLog.write(STRING_PARSE + count + " message(s) found.\n");
         }
         catch (ParseException e) {
             System.out.println("Unparseable date " + e.getMessage());
-            writerLog.write(STRING_PARSE + "Unparseable date " + e.getMessage() + "!\r\n");
+            writerLog.write(STRING_PARSE + "Unparseable date " + e.getMessage() + "!\n");
         }
     }
 
-    public void findWord(FileWriter writerLog, Scanner in) throws IOException{
-        writerLog.write(STRING_PARSE + "Find message by word.\r\n");
+    public void findWord(FileWriter writerLog) throws IOException{
+        Scanner in = new Scanner(System.in);
+        writerLog.write(STRING_PARSE + "Find message by word.\n");
         System.out.println("Input word:");
         String word = in.next();
         boolean findWord = false;
@@ -253,11 +257,11 @@ public class History {
             System.out.println("Successfully done.");
         else
             System.out.println("No message with this word!");
-        writerLog.write(STRING_PARSE + count + " message(s) found.\r\n");
+        writerLog.write(STRING_PARSE + count + " message(s) found.\n");
     }
 
     public void showHistory(FileWriter writerLog) throws IOException{
-        writerLog.write(STRING_PARSE + "Show history.");
+        writerLog.write(STRING_PARSE + "Show history.\n");
         if (!history.isEmpty())
             for (Message mes : history)
                 System.out.println(mes.toString());
@@ -265,8 +269,9 @@ public class History {
             System.out.println("History is empty!");
     }
 
-    public void findRegularExpressions(FileWriter writerLog, Scanner in) throws IOException{
-        writerLog.write(STRING_PARSE + "Find message by regular expression.\r\n");
+    public void findRegularExpressions(FileWriter writerLog) throws IOException{
+        Scanner in = new Scanner(System.in);
+        writerLog.write(STRING_PARSE + "Find message by regular expression.\n");
         boolean findReg = false;
         System.out.println("Input regular expression:");
         String regExpr = in.nextLine();
@@ -282,6 +287,6 @@ public class History {
         }
         if (!findReg)
             System.out.println("There are no messages with this regular expression!");
-        writerLog.write(STRING_PARSE + count + " message(s) found.\r\n");
+        writerLog.write(STRING_PARSE + count + " message(s) found.\n");
     }
 }

@@ -49,6 +49,6 @@ public class Message {
     }
 
     public String toString() {
-        return "id : " + id + "\n Who: " + author + "\n " + message + "\n\t\t\t" + time;
+        return "id : " + id + "\n Who: " + author + "\n " + message + "\n\t\t\t\t" + time;
     }
 }
