@@ -7,26 +7,36 @@
 </head>
 <body>
     <header>
-        <h2>
-            The most cozy chat in the World
-        </h2>
+        <h2>The most cozy chat in the World</h2>
     </header>
     <div class="user">
         <input class="nickname" type="text" placeholder="Nickname">
         <button class="changenick" type="button">Change</button>
     </div>
     <div class="middle">
-
         <div class="history">
             <div class = "User1">Sashka97</div>
-            <div class = "userMessage">Hello</div>
+            <div class = "userMessage">
+                Hello
+                <div class="timeUs">5:40 pm</div>
+            </div>
             <div class = "User2">Spaceman</div>
-            <div class = "myMessage">Hi</div>
+            <div class = "myMessage">
+                Hi
+                <div class="timeMe">5:41 pm</div>
+            </div>
+            <div class = "myRedactedMessage">Spaceman redacted upper message</div>
             <div class = "User1">Sashka97</div>
-            <div class = "userMessage">Where are you from?</div>
+            <div class = "userMessage">
+                Where are you from?
+                <div class="timeUs">5:43 pm</div>
+            </div>
             <div class = "User2">Spaceman</div>
-            <div class = "myMessage">I'm from Belarus, Minsk, and you?</div>
-            <div class = "myDeletedMessage">Сообщение удалено.</div>
+            <div class = "myMessage">
+                I'm from Belarus, Minsk, and you?
+                <div class="timeMe">5:45 pm</div>
+            </div>
+            <div class = "myDeletedMessage">Message deleted.</div>
         </div>
         <textarea name="message" id="input" placeholder="Do you want to say something?"></textarea>
         <button id="send">Send</button>
