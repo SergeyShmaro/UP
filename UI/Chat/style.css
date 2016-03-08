@@ -3,7 +3,7 @@ html, body
     margin: 0;
     height: 100%;
     width: 100%;
-    background: url("http://www.ultrahdwall.com/wp-content/uploads/2013/10/Fantasy-Lake-Wallpaper.jpg") no-repeat;
+    background: url("http://www.ultrahdwall.com/wp-content/uploads/2013/10/Fantasy-Lake-Wallpaper.jpg") no-repeat lightblue;
     background-size: cover;
 }
 
@@ -19,7 +19,7 @@ header
 
 h2
 {
-    margin-top: 0%;
+    margin-top: 0;
     color: white;
     text-align: center;
     font-style: italic;
@@ -36,7 +36,7 @@ h2
 .nickname
 {
     height: 18px;
-    margin: 0% 1% ;
+    margin: 0 1% ;
     width: 70%;
     font-size: 90%;
     border-radius: 10px;
@@ -58,6 +58,8 @@ h2
     opacity: 0.8;
     border: 2px solid grey;
     border-radius: 10px;
+    min-width: 60px;
+    cursor: pointer;
 }
 
 .middle
@@ -73,22 +75,24 @@ h2
     align-content: center;
 }
 
-.User1
+.user1
 {
+    margin-top: 3px;
     text-align: left;
     padding-left: 10px;
     font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
     font-size: 15px;
-    color: white;
+    color: black;
 }
 
-.User2
+.user0
 {
+    margin-top: 3px;
     text-align: right;
     padding-right: 10px;
     font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
     font-size: 15px;
-    color: white;
+    color: black;
 }
 
 .myMessage
@@ -103,12 +107,13 @@ h2
     margin: 10px 10px 10px 50%;
     max-width: 50%;
     overflow: auto;
-    background-color: darkblue;
-    color: white;
+    background-color: #3addff;
+    color: black;
 }
 
 .userMessage
 {
+
     position: relative;
     text-align: left;
     padding: 10px;
@@ -119,13 +124,19 @@ h2
     margin: 10px 50% 10px 10px;
     max-width: 50%;
     overflow: auto;
-    background-color: darkblue;
-    color: white;
+    background-color: #3addff;
+    color: black;
 }
 
-.timeUs
+li
 {
+    list-style: none;
+}
 
+ul
+{
+    margin-left: 0;
+    padding-left: 0;
 }
 
 .myDeletedMessage
@@ -163,12 +174,38 @@ h2
     box-sizing: border-box;
     border: 2px solid lightblue;
     background-color: cornflowerblue;
-    opacity: 0.5;
+    opacity: 0.7;
     width: 100%;
     height: 600px;
     min-height: 250px;
     overflow-y: scroll;
     border-radius: 5px;
+}
+.redact
+{
+    width: 22px;
+    height: 22px;
+    background: url("http://iconspot.ru/files/296912.png") no-repeat center white ;
+    background-size: 100%;
+    border-radius: 5px ;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    float: left;
+    margin: 1px;
+}
+
+.delete {
+    width: 22px;
+    height: 22px;
+    background: url("http://s1.iconbird.com/ico/2013/9/452/w448h5121380477116trash.png") no-repeat center white;
+    background-size: 80%;
+    border-radius: 5px ;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    float: left;
+    margin: 1px;
 }
 textarea
 {
@@ -176,7 +213,7 @@ textarea
     border: 2px solid lightblue;
     height: 85px;
     width: 100%;
-    font-family: Book Antiqua, Arial, Tahoma;
+    font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
     font-style: italic;
     font-size: 18px;
     padding: 5px;
@@ -185,7 +222,7 @@ textarea
     color: black;
 }
 
-#send, #redact, #delete
+#send
 {
     background-color: cornflowerblue;
     color: white;
@@ -195,21 +232,8 @@ textarea
     height: 40px;
     width: 15%;
     opacity: 0.8;
-}
-
-#send
-{
-    margin-left: 27.5%;
-}
-
-#redact
-{
     margin-left: 42.5%;
-}
-
-#delete
-{
-    margin-left: 57.5%;
+    min-width: 46px;
 }
 
 .warning
