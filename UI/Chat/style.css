@@ -111,6 +111,31 @@ h2
     color: black;
 }
 
+.cancelOfRedact
+{
+    width: 22px;
+    height: 22px;
+    background: url("http://www.lepkomplekt.ru/static/images/fck/image/galochka.png") no-repeat center white ;
+    background-size: 100%;
+    border-radius: 5px ;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    float: right;
+    margin: 1px;
+}
+
+.redactInput
+{
+    position: relative;
+    border-radius: 10px;
+    font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+    font-size: 15px;
+    overflow: auto;
+    background-color: #0b9bff;
+    color: black;
+}
+
 .userMessage
 {
 

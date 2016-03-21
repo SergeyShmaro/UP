@@ -1,133 +1,195 @@
 var id = 0;
-var countNickUsed=0;
 var username = "Spaceman";
+var historyMes = [];
 
 function run(){
     var appContainer = document.getElementsByClassName('main')[0];
-
     appContainer.addEventListener('click', delegateMessage);
     appContainer.addEventListener('keyboard', delegateMessage);
+    historyMes = loadMessages() || [newMessage('Hello world')];
+    id = historyMes[historyMes.length - 1].id;
+    username = loadUsername() || "Spaceman";
+    document.getElementById("nick").value = username;
+    updateHistory(historyMes);
 }
 
 function delegateMessage(evtObj) {
     if(evtObj.type === 'click' && evtObj.target.classList.contains('changenick')) {
         changeName(evtObj);
     }
-    if((evtObj.type === 'click' && evtObj.target.classList.contains('send')) || evtObj.keyCode == 13) {
+    if(evtObj.type === 'click' && evtObj.target.classList.contains('send'))  {
         sendMessage(evtObj);
     }
 }
 
 function changeName() {
     var input = document.getElementById('nick');
-    var newnick=document.getElementById('nickOnHistory0');
-    var i=0;
-    while(i < countNickUsed){
-        if(newnick.className === 'myRedactedMessage')
-            newnick.innerHTML = newnick.innerHTML.replace(username, input.value);
-        else
-            newnick.innerHTML = input.value;
-        i++;
-        newnick=document.getElementById('nickOnHistory'+i);
-    }
     username = input.value;
+    saveUsername(username);
+    updateHistory(historyMes);
 }
 
 function sendMessage() {
-    var message = document.getElementById('inputmessage');
+    var inputMessage = document.getElementById('inputmessage');
+    var text = inputMessage.value;
+    if (text != "") {
+        historyMes.push(newMessage(text));
+        updateHistory(historyMes);
+        inputMessage.value = "";
+    }
+}
+
+function newMessage(text){
+    id++;
+    return {
+        nick: username,
+        id: id,
+        messagetext: text,
+        time: new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1"),
+        isDeleted: false
+    };
+
+}
+
+function updateHistory(historyMes){
+    document.getElementById("list").innerHTML = "";
+    for (var i = 0; i < historyMes.length; i++)
+        showUpdatedHistory(historyMes[i]);
+    document.getElementById('list').scrollTop=9999;
+    saveMessages(historyMes);
+}
+
+function showUpdatedHistory(message) {
+
     var divNick = document.createElement('li');
     var divMyMessage = document.createElement('li');
     var time = document.createElement('div');
-    var butDelete = document.createElement('button');
-    var butRedact = document.createElement('button');
     var divTextMessage=document.createElement('div');
 
-    butDelete.classList.add('delete');
-    butRedact.classList.add('redact');
+    if(username === message.nick){
+        var inputNewMessage=document.createElement('input');
+        var butCancel=document.createElement('button');
+
+        if(!message.isDeleted) {
+            var butRedact = document.createElement('button');
+            var butDelete = document.createElement('button');
+            butDelete.classList.add('delete');
+            divMyMessage.appendChild(butDelete);
+            butDelete.addEventListener('click', function () {
+                deleteMessage(message);
+            });
+            butRedact.classList.add('redact');
+            divMyMessage.appendChild(butRedact);
+            butRedact.addEventListener('click', function () {
+                changeMessage(message);
+            });
+        }
+
+        butCancel.classList.add("cancelOfRedact");
+        butCancel.setAttribute('id', 'cancel'+message.id);
+        butCancel.addEventListener('click', function () {
+            stopChangeMessage(message);
+        });
+        butCancel.hidden=true;
+        inputNewMessage.classList.add('redactInput');
+        inputNewMessage.setAttribute('id','redactInput'+message.id);
+        inputNewMessage.hidden=true;
+
+        divMyMessage.appendChild(inputNewMessage);
+        divMyMessage.appendChild(butCancel);
+        divMyMessage.classList.add('myMessage');
+        divNick.classList.add('user0');
+    }
+    else{
+        divMyMessage.classList.add('userMessage');
+        divNick.classList.add('user1');
+    }
+
     time.classList.add('time');
-    divMyMessage.classList.add('myMessage');
-    divNick.classList.add('user0');
     divTextMessage.classList.add('text');
+    divMyMessage.setAttribute('id', 'user' + message.id);
+    divTextMessage.setAttribute('id', 'textuser' + message.id);
 
-    divMyMessage.setAttribute('id', 'user'+id);
-    divTextMessage.setAttribute('id', 'textuser'+id);
-    divNick.setAttribute('id', 'nickOnHistory'+countNickUsed);
-    countNickUsed++;
+    divNick.innerHTML = message.nick;
+    time.textContent = message.time;
+    divTextMessage.innerHTML = message.messagetext;
 
-    divNick.innerHTML=username;
-    divTextMessage.innerHTML=message.value;
-    time.textContent = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
-
-    var s = ""+id;
-
-    butDelete.addEventListener('click', function(){
-        deleteMessage(s);
-    });
-
-    butRedact.addEventListener('click', function(){
-        changeMessage(s);
-    });
-
-    divMyMessage.appendChild(butDelete);
-    divMyMessage.appendChild(butRedact);
     divMyMessage.appendChild(divTextMessage);
     divMyMessage.appendChild(time);
 
-    if(message.value != "")
-    {
-        document.getElementById('list').appendChild(divNick);
-        document.getElementById('list').appendChild(divMyMessage);
-    }
-    message.value = "";
-    id++;
+    document.getElementById('list').appendChild(divNick);
+    document.getElementById('list').appendChild(divMyMessage);
 }
 
 
-function deleteMessage(s) {
-    var time =document.createElement('div');
-    time.textContent = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
-    time.classList.add('time');
-    var toDelete = document.getElementById('user' + s);
-    toDelete.innerHTML = "Message deleted.";
-    toDelete.classList.remove('myMessage');
-    toDelete.classList.add('myDeletedMessage');
-    toDelete.appendChild(time);
+function deleteMessage(mes) {
+    mes.messagetext='Message deleted';
+    mes.time="Deleted on " + new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+    mes.isDeleted=true;
+    updateHistory(historyMes);
 }
 
-function changeMessage(s) {
-    var textmessage=document.getElementById('textuser'+s);
-    var newmessage=prompt("Redact your message", textmessage.innerHTML);
-    var check= document.getElementById('nickOnHistory0');
-    var i=0;
-    var find=false;
-    var idRedactedMesage='nickOnHistory'+countNickUsed;
-    var time =document.createElement('div');
-    time.textContent = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
-    time.classList.add('time');
-    while(i<countNickUsed){
-        if(check.className === 'myRedactedMessage') {
-            find=true;
-            break;
-        }
-        i++;
-        check=document.getElementById('nickOnHistory'+i);
-        console.log('find!');
+function stopChangeMessage(mes){
+    var input = document.getElementById('redactInput'+mes.id);
+    var butCancel= document.getElementById('cancel'+mes.id);
+    var textOfMessage = document.getElementById("textuser"+mes.id);
+    if( input.value!= "" &&
+        input.value!= mes.messagetext){
+            mes.messagetext=input.value;
+            mes.time='Redacted on ' + new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
     }
-    if(find){
-        idRedactedMesage=check.getAttribute('id');
-        document.getElementById('list').removeChild(check);
-        console.log('delete');
+    input.hidden=true;
+    butCancel.hidden=true;
+    textOfMessage.hidden=false;
+    updateHistory(historyMes);
+}
+
+function changeMessage(mes) {
+    var input = document.getElementById('redactInput'+ mes.id);
+    var butCancel= document.getElementById('cancel'+ mes.id);
+    var textOfMessage = document.getElementById("textuser"+mes.id);
+    input.hidden=false;
+    input.value=mes.messagetext;
+    butCancel.hidden=false;
+    textOfMessage.hidden=true;
+}
+
+function saveMessages(listToSave) {
+    if (!isStorage())
+        return;
+
+    localStorage.setItem("History", JSON.stringify(listToSave));
+}
+
+function saveUsername(name) {
+    if (!isStorage())
+        return;
+
+    localStorage.setItem("Username", name);
+}
+
+function loadMessages() {
+    if (!isStorage())
+        return;
+    var item = localStorage.getItem("History");
+
+    return item && JSON.parse(item);
+}
+
+function loadUsername() {
+    if (!isStorage())
+        return;
+
+    var item = localStorage.getItem("Username");
+    console.log(item);
+    return item;
+}
+
+function isStorage() {
+    if (typeof(Storage) === "undefined") {
+        alert('localStorage is not accessible');
+        return false;
     }
-    if (newmessage!=null && newmessage!=""){
-        console.log('add');
-        var divRedact= document.createElement('div');
-        divRedact.classList.add('myRedactedMessage');
-        divRedact.setAttribute('id', idRedactedMesage);
-        if(!find)
-            countNickUsed++;
-        divRedact.innerHTML=username+' redacted upper message: ' + textmessage.innerHTML + ' to ' + newmessage;
-        divRedact.appendChild(time);
-        textmessage.innerHTML=newmessage;
-        document.getElementById('list').appendChild(divRedact);
-    }
+    else
+        return true;
 }
