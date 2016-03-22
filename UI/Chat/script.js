@@ -24,7 +24,11 @@ function delegateMessage(evtObj) {
 
 function changeName() {
     var input = document.getElementById('nick');
-    username = input.value;
+    var nick=input.value;
+    nick=deleteSpaces(nick);
+    if(nick != "" && nick!=username)
+        username = nick;
+    input.value=nick;
     saveUsername(username);
     updateHistory(historyMes);
 }
@@ -32,6 +36,8 @@ function changeName() {
 function sendMessage() {
     var inputMessage = document.getElementById('inputmessage');
     var text = inputMessage.value;
+    text=deleteSpaces(text);
+    inputMessage.value=text;
     if (text != "") {
         historyMes.push(newMessage(text));
         updateHistory(historyMes);
@@ -49,6 +55,10 @@ function newMessage(text){
         isDeleted: false
     };
 
+}
+
+function deleteSpaces(text){
+    return text.replace(/(^\s+|\s+$)/g,'');
 }
 
 function updateHistory(historyMes){
@@ -133,6 +143,7 @@ function stopChangeMessage(mes){
     var input = document.getElementById('redactInput'+mes.id);
     var butCancel= document.getElementById('cancel'+mes.id);
     var textOfMessage = document.getElementById("textuser"+mes.id);
+    input.value=deleteSpaces(input.value);
     if( input.value!= "" &&
         input.value!= mes.messagetext){
             mes.messagetext=input.value;
